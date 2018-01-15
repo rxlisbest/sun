@@ -1,0 +1,13 @@
+{
+    "name": "rxlisbest/sun-core",
+    "description": "An open source php-framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "roy",
+            "email": "rxlisbest@163.com"
+        }
+    ],
+    "require": {}
+}

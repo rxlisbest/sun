@@ -1,1 +1,1 @@
-# sun-core
+# sun

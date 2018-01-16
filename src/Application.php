@@ -9,7 +9,9 @@
 namespace Rxlisbest\Sun;
 
 
-class Sun
+class Application
 {
+    public function run(){
 
+    }
 }

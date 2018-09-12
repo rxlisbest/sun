@@ -7,36 +7,50 @@
  */
 
 namespace Rxlisbest\Sun;
-use Rxlisbest\Sun\Core\Request;
-use Rxlisbest\Sun\Core\Route;
 
-class Application{
+use Rxlisbest\Sun\Core\Factory;
+use Rxlisbest\Sun\Core\Base;
 
-    private $config;
+class Application extends Base{
+
+    protected $config;
+
+    protected $factory;
+
+    protected $component = [
+        'request' => 'Rxlisbest\Sun\Component\Request',
+        'route' => 'Rxlisbest\Sun\Component\Route'
+    ];
+
     protected $controller_namespace = 'app\controllers';
 
     public function __construct($config){
         $this->config = $config;
+        $this->factory = new Factory();
     }
 
     public function run(){
-        $request = new Request();
-        $base_path = $this->config['base_path'];
-        $url = $request->getUrl($this->config['path_info']);
-        $script_file = $_SERVER['SCRIPT_FILENAME'];
-        $script_name = $_SERVER['SCRIPT_NAME'];
-        $path = substr($url, strlen($script_name) + 1);
-        $controller_id = explode('/', $path, 2)[0];
+        $request = $this->getRequest();
+        $route = $this->getRoute();
+        $reponse = $this->handle($route, $request);
 
         $namespace = Route::getNamespace($url, $base_path);
         $file = Route::getFile($namespace);
         include $base_path . $file;
         $controller = $this->findController($namespace);
-        call_user_func_array([$controller, 'index'], []);
     }
 
-    public function findController($namespace){
-        $controller = $namespace;
-        return new $controller();
+    public function getComponent($id){
+        return $this->component[$id];
+    }
+
+    public function getRequest(){
+        $class = $this->getComponent('request');
+        return $this->factory->get($class);
+    }
+
+    public function getRoute(){
+        $class = $this->getComponent('route');
+        return $this->factory->get($class);
     }
 }

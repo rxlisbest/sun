@@ -8,10 +8,25 @@
 
 namespace Rxlisbest\Sun\Core;
 
-use Rxlisbest\sun\Core\Container;
+use Rxlisbest\Sun\Core\Container;
 
 class Factory
 {
     private $_singletons;
-    
+
+    public function get($class, $params = []){
+        return $this->build($class, $params);
+    }
+
+    public function getSingleton(){
+        if(isset($this->_singletons[$class])){
+            return $this->_singletons[$class];
+        }
+        $this->_singletons[$class] = $this->build($class, $params);
+        return $this->_singletons[$class];
+    }
+
+    private function build($class, $params){
+        return Container::getInstance($class, $params);
+    }
 }

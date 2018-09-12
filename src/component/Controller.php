@@ -6,11 +6,17 @@
  * Time: 下午1:42
  */
 
-namespace Rxlisbest\Sun\Core;
+namespace Rxlisbest\Sun\Component;
 
 
 class Controller
 {
+    protected $default_action = 'index';
+
+    public function runAction($id){
+
+    }
+
     public function render()
     {
 

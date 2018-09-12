@@ -23,14 +23,20 @@ class Application{
         $request = new Request();
         $base_path = $this->config['base_path'];
         $url = $request->getUrl($this->config['path_info']);
-        include $base_path . '/app/controllers/IndexController.php';
+        $script_file = $_SERVER['SCRIPT_FILENAME'];
+        $script_name = $_SERVER['SCRIPT_NAME'];
+        $path = substr($url, strlen($script_name) + 1);
+        $controller_id = explode('/', $path, 2)[0];
 
-        $controller = $this->findController();
+        $namespace = Route::getNamespace($url, $base_path);
+        $file = Route::getFile($namespace);
+        include $base_path . $file;
+        $controller = $this->findController($namespace);
         call_user_func_array([$controller, 'index'], []);
     }
 
-    public function findController(){
-        $controller = '\app\controllers\IndexController';
+    public function findController($namespace){
+        $controller = $namespace;
         return new $controller();
     }
 }

@@ -10,6 +10,7 @@ namespace Rxlisbest\Sun\Core;
 
 use Rxlisbest\Sun\Component\Route;
 
+
 class Base
 {
     protected $default_controller = 'index';
@@ -19,9 +20,8 @@ class Base
         $url = $route->getUrl($this->config['path_info']);
         list($controller_id, $url) = $this->getControllerId($url);
 
-        $controller = $this->createController($controller_id);
-        $controller->runAction();
-        call_user_func_array([$controller, $ids[1]], []);
+//        $controller->runAction();
+        $this->runAction($controller_id, $url);
     }
 
     protected function getControllerId($url){
@@ -53,10 +53,22 @@ class Base
     }
 
     protected function createController($controller_id){
-
+        if($pos = strrpos($controller_id, '\\') !== false){
+            $directory = substr($controller_id, 0, $pos);
+            $class_name = ucwords(substr($controller_id, $pos + 1));
+        }
+        else{
+            $directory = '';
+            $class_name = ucwords($controller_id);
+        }
+        $controller_id = $directory . $class_name;
+        return $this->factory->get($this->controller_namespace . '\\' . $controller_id . 'Controller');
     }
 
-    protected function runAction(){
+    protected function runAction($controller_id, $url){
+        $action_id = $url ?: $this->default_action;
 
+        $controller = $this->createController($controller_id);
+        call_user_func_array([$controller, $action_id], []);
     }
 }

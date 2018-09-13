@@ -10,6 +10,7 @@ namespace Rxlisbest\Sun;
 
 use Rxlisbest\Sun\Core\Factory;
 use Rxlisbest\Sun\Core\Base;
+use Rxlisbest\Sun\Core\Test;
 
 class Application extends Base{
 
@@ -26,6 +27,8 @@ class Application extends Base{
 
     public function __construct($config){
         $this->config = $config;
+        Test::$config = $this->config;
+        Test::$controller_namespace = $this->controller_namespace;
         $this->factory = new Factory();
     }
 
@@ -54,3 +57,5 @@ class Application extends Base{
         return $this->factory->get($class);
     }
 }
+
+spl_autoload_register(['Rxlisbest\Sun\Core\Test', 'autoload'], true, true);

@@ -16,7 +16,8 @@ class Test
 
     public static function autoload($class_name){
         if(strpos($class_name, self::$controller_namespace) !== false){
-            include('/Library/WebServer/Documents/htdocs/php-frame/sun/' . str_replace('\\', '/', $class_name) . '.php');
+            $class_file = self::$config['base_path'] . '/'. str_replace('\\', '/', $class_name) . '.php';
+            include($class_file);
         }
     }
 }

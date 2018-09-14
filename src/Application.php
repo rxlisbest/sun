@@ -36,11 +36,6 @@ class Application extends Base{
         $request = $this->getRequest();
         $route = $this->getRoute();
         $reponse = $this->handle($route, $request);
-
-        $namespace = Route::getNamespace($url, $base_path);
-        $file = Route::getFile($namespace);
-        include $base_path . $file;
-        $controller = $this->findController($namespace);
     }
 
     public function getComponent($id){

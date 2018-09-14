@@ -13,7 +13,6 @@ class Base{
         $url = $route->getUrl($this->config['path_info']);
         list($controller_id, $url) = $route->getControllerId($url);
 
-//        $controller->runAction();
         $action_id = $route->getActionId($url);
         $this->runAction($controller_id, $action_id);
     }
@@ -28,7 +27,7 @@ class Base{
             $class_name = ucwords($controller_id);
         }
         $controller_id = $directory . $class_name;
-        return $this->factory->get($this->controller_namespace . '\\' . $controller_id . 'Controller');
+        return $this->factory->get($this->controller_namespace . '\\' . str_replace('/', '\\', $controller_id) . 'Controller');
     }
 
     protected function runAction($controller_id, $action_id){

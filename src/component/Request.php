@@ -13,11 +13,6 @@ use Rxlisbest\Sun\Core\Route;
 
 class Request implements \Rxlisbest\Sun\Core\Request
 {
-    public function getController()
-    {
-
-    }
-
     public function getAction()
     {
 

@@ -15,9 +15,10 @@ class Test
     public static $controller_namespace;
 
     public static function autoload($class_name){
-        if(strpos($class_name, self::$controller_namespace) !== false){
-            $class_file = self::$config['base_path'] . '/'. str_replace('\\', '/', $class_name) . '.php';
-            include($class_file);
+        $class_file = self::$config['base_path'] . '/'. str_replace('\\', '/', $class_name) . '.php';
+        if(!is_file($class_file)){
+            return ;
         }
+        include($class_file);
     }
 }

@@ -8,18 +8,10 @@
 
 namespace Rxlisbest\Sun\Component;
 
-class Model
+
+class Db
 {
-    protected function __construct()
-    {
-        
-    }
-
-    public function get(){
-
-    }
-
-    public function where(){
-
+    public function connection(){
+        return new \PDO('mysql:host=localhost;dbname=taobao_2', 'root', 'root');
     }
 }

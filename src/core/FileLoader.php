@@ -9,7 +9,7 @@
 namespace Rxlisbest\Sun\Core;
 
 
-class Test
+class FileLoader
 {
     public static $config;
     public static $controller_namespace;

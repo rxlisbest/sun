@@ -8,17 +8,19 @@
 
 namespace Rxlisbest\Sun\Component;
 
+use Rxlisbest\Sun\Core\ClassLoader;
 
 class Controller
 {
+    protected $view;
+    protected $view_class = 'Rxlisbest\Sun\Component\View';
+    public function __construct()
+    {
+        $this->view = ClassLoader::createObject($this->view_class);
+    }
+
     public function fetch($template, $params = [])
     {
-        ob_start();
-        ob_implicit_flush(0);
-        extract($params, EXTR_OVERWRITE);
-        $file = '/Library/WebServer/Documents/htdocs/php-frame/sun/app/views/index/index.php';
-        include($file);
-        $content = ob_get_clean();
-        echo $content;
+        return $this->view->fetch($template, $params);
     }
 }

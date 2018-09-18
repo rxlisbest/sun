@@ -17,7 +17,7 @@ class Model
 
     public function __construct()
     {
-        $db = ClassLoader::createObject($this->db_class);
+        $db = ClassLoader::createObject($this->db_class, [ClassLoader::$config['database']]);
         $this->db = $db->connection();
     }
 

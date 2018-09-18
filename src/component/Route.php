@@ -8,6 +8,7 @@
 
 namespace Rxlisbest\Sun\Component;
 
+use Rxlisbest\Sun\Core\ClassLoader;
 
 class Route
 {
@@ -15,8 +16,8 @@ class Route
     protected $default_controller = 'index';
     protected $default_action = 'index';
 
-    public function getUrl($path_info){
-        if($path_info){
+    public function getUrl(){
+        if(ClassLoader::$config['path_info']){
             $url = $_SERVER['REQUEST_URI'];
         }
         else{
@@ -57,5 +58,16 @@ class Route
     public function getActionId($url){
         $action_id = $url ?: $this->default_action;
         return $action_id;
+    }
+
+    public function controller(){
+        list($controller_id, $url) = $this->getControllerId($this->getUrl());
+        if($pos = strrpos('/', $controller_id) !== false){
+            $controller = substr($controller_id, 0, $pos);
+        }
+        else{
+            $controller = $controller_id;
+        }
+        return $controller;
     }
 }

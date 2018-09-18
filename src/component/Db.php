@@ -10,7 +10,14 @@ namespace Rxlisbest\Sun\Component;
 
 class Db
 {
-    public function connection(){
-        return new \PDO('mysql:host=localhost;dbname=taobao_2', 'root', 'root');
+    protected $config;
+    public function __construct($config)
+    {
+        $this->config = $config;
+    }
+
+    public function connection()
+    {
+        return new \PDO($this->config['dsn'], $this->config['username'], $this->config['password']);
     }
 }

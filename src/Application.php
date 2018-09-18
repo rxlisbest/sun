@@ -11,11 +11,11 @@ namespace Rxlisbest\Sun;
 use Rxlisbest\Sun\Core\Factory;
 use Rxlisbest\Sun\Core\Base;
 use Rxlisbest\Sun\Core\ClassLoader;
+use Rxlisbest\Sun\Sun;
 
 class Application extends Base{
 
     protected $config;
-
     protected $factory;
 
     protected $component = [
@@ -30,6 +30,7 @@ class Application extends Base{
         ClassLoader::$config = $this->config;
         ClassLoader::$controller_namespace = $this->controller_namespace;
         ClassLoader::$factory = $this->factory = new Factory();
+        Sun::$app = $this;
     }
 
     public function run(){

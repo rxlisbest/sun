@@ -10,14 +10,8 @@ namespace Rxlisbest\Sun\Component;
 
 use Rxlisbest\Sun\Core\Route;
 
-
 class Request implements \Rxlisbest\Sun\Core\Request
 {
-    public function getAction()
-    {
-
-    }
-
     public function get(){
         return $_GET;
     }

@@ -16,7 +16,7 @@ class ClassLoader
     public static $factory;
 
     public static function autoload($class_name){
-        $class_file = self::$config['base_path'] . '/'. str_replace('\\', '/', $class_name) . '.php';
+        $class_file = self::$config['base_path'] . '/' . str_replace('\\', '/', $class_name) . '.php';
         if(!is_file($class_file)){
             return ;
         }

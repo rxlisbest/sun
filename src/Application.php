@@ -10,7 +10,7 @@ namespace Rxlisbest\Sun;
 
 use Rxlisbest\Sun\Core\Factory;
 use Rxlisbest\Sun\Core\Base;
-use Rxlisbest\Sun\Core\FileLoader;
+use Rxlisbest\Sun\Core\ClassLoader;
 
 class Application extends Base{
 
@@ -27,9 +27,9 @@ class Application extends Base{
 
     public function __construct($config){
         $this->config = $config;
-        FileLoader::$config = $this->config;
-        FileLoader::$controller_namespace = $this->controller_namespace;
-        $this->factory = new Factory();
+        ClassLoader::$config = $this->config;
+        ClassLoader::$controller_namespace = $this->controller_namespace;
+        ClassLoader::$factory = $this->factory = new Factory();
     }
 
     public function run(){
@@ -53,4 +53,4 @@ class Application extends Base{
     }
 }
 
-spl_autoload_register(['Rxlisbest\Sun\Core\FileLoader', 'autoload'], true, true);
+spl_autoload_register(['Rxlisbest\Sun\Core\ClassLoader', 'autoload'], true, true);

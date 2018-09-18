@@ -8,7 +8,6 @@
 
 namespace Rxlisbest\Sun\Component;
 
-
 class Db
 {
     public function connection(){

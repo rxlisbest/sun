@@ -8,15 +8,21 @@
 
 namespace Rxlisbest\Sun\Component;
 
+use Rxlisbest\Sun\Core\ClassLoader;
+
 class Model
 {
-    protected function __construct()
+    protected $db_class = 'Rxlisbest\Sun\Component\Db';
+    protected $db;
+
+    public function __construct()
     {
-        
+        $db = ClassLoader::createObject($this->db_class);
+        $this->db = $db->connection();
     }
 
     public function get(){
-
+        return $this->db->query('SELECT * FROM migration');
     }
 
     public function where(){

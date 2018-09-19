@@ -11,6 +11,7 @@ namespace Rxlisbest\Sun\Component;
 class Db
 {
     protected $config;
+
     public function __construct($config)
     {
         $this->config = $config;

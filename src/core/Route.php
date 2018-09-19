@@ -8,9 +8,10 @@
 
 namespace Rxlisbest\Sun\Core;
 
-interface Route{
+interface Route
+{
 
     public function getUrl();
 
-    
+
 }

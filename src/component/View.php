@@ -8,7 +8,7 @@
 
 namespace Rxlisbest\Sun\Component;
 
-use Rxlisbest\Sun\Core\ClassLoader;
+use Rxlisbest\Sun\Sun;
 
 class View
 {
@@ -17,7 +17,7 @@ class View
         ob_start();
         ob_implicit_flush(0);
         extract($params, EXTR_OVERWRITE);
-        $file = ClassLoader::$config['base_path'] . '/app/views/index/index.php';
+        $file = Sun::$config['base_path'] . '/app/views/index/index.php';
         include($file);
         $content = ob_get_clean();
         echo $content;

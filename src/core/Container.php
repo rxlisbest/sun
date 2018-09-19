@@ -11,24 +11,22 @@ namespace Rxlisbest\Sun\Core;
 
 class Container
 {
-    public static function getInstance($class, $params){
-        if(empty($params)){
+    public static function getInstance($class, $params)
+    {
+        if (empty($params)) {
             return new $class();
-        }
-        else{
+        } else {
             $reflection = new \ReflectionClass($class);
             $contructor = $reflection->getConstructor();
             $default_params = $contructor->getParameters();
             $args = [];
-            foreach($default_params as $k => $v){
-                if(isset($params[$k])){
+            foreach ($default_params as $k => $v) {
+                if (isset($params[$k])) {
                     $args[] = $params[$k];
-                }
-                else{
-                    if($v->isDefaultValueAvailable()){
+                } else {
+                    if ($v->isDefaultValueAvailable()) {
                         $args[] = $v->getDefaultValue();
-                    }
-                    else{
+                    } else {
                         $args[] = null;
                     }
                 }

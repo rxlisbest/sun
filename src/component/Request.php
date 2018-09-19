@@ -12,15 +12,18 @@ use Rxlisbest\Sun\Core\Route;
 
 class Request implements \Rxlisbest\Sun\Core\Request
 {
-    public function get(){
+    public function get()
+    {
         return $_GET;
     }
 
-    public function post(){
+    public function post()
+    {
         return $_POST;
     }
 
-    public function request(){
+    public function request()
+    {
         return array_merge($_GET, $_POST);
     }
 }

@@ -8,15 +8,16 @@
 
 namespace Rxlisbest\Sun\Component;
 
-use Rxlisbest\Sun\Core\ClassLoader;
+use Rxlisbest\Sun\Sun;
 
 class Controller
 {
     protected $view;
     protected $view_class = 'Rxlisbest\Sun\Component\View';
+
     public function __construct()
     {
-        $this->view = ClassLoader::createObject($this->view_class);
+        $this->view = Sun::createObject($this->view_class);
     }
 
     public function fetch($template, $params = [])

@@ -8,22 +8,16 @@
 
 namespace Rxlisbest\Sun\Core;
 
-
 class ClassLoader
 {
     public static $config;
-    public static $controller_namespace;
-    public static $factory;
 
-    public static function autoload($class_name){
+    public static function autoload($class_name)
+    {
         $class_file = self::$config['base_path'] . '/' . str_replace('\\', '/', $class_name) . '.php';
-        if(!is_file($class_file)){
-            return ;
+        if (!is_file($class_file)) {
+            return;
         }
         include($class_file);
-    }
-
-    public static function createObject($class, $params = []){
-        return self::$factory->get($class, $params);
     }
 }

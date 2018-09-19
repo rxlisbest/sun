@@ -11,5 +11,5 @@ namespace Rxlisbest\Sun\Component;
 
 class Component
 {
-    
+
 }

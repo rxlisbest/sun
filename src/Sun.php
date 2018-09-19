@@ -12,4 +12,12 @@ namespace Rxlisbest\Sun;
 class Sun
 {
     public static $app;
+    public static $config;
+    public static $controller_namespace;
+    public static $factory;
+
+    public static function createObject($class, $params = [])
+    {
+        return static::$factory->get($class, $params);
+    }
 }

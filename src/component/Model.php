@@ -19,6 +19,7 @@ class Model
     private $_where;
     private $_offset = 0;
     private $_limit;
+    private $_join;
     private $_group;
     private $_order;
 
@@ -35,17 +36,34 @@ class Model
 
     public function field($field)
     {
-        if(is_array($field)){
+        if (is_array($field)) {
             $field = implode(',', $field);
         }
         $this->_field = $field;
         return $this;
     }
 
-    public function where($where)
+    public function where()
     {
-        $this->_where[] = $where;
-        return $this;
+        $args = func_get_args();
+        $n = count($args);
+        if(is_string($args[$n - 1])){
+            $m = $args[$n - 1];
+            unset($args[$n - 1]);
+        }
+        else{
+            $m = 'AND';
+        }
+        $where = [];
+        foreach ($args as $k => $v) {
+            if (is_array($v[0])) {
+                $where[] = '(' . call_user_func_array([$this, 'where'], $v) . ')';
+            }
+            else{
+                $where[] = '(' . implode(' ', $v) . ')';
+            }
+        }
+        return implode(" $m ", $where);
     }
 
     public function limit($offset, $limit)

@@ -72,4 +72,10 @@ class Route
         }
         return $controller;
     }
+
+    public function action()
+    {
+        list($controller_id, $url) = $this->getControllerId($this->getUrl());
+        return $this->getActionId($url);
+    }
 }

@@ -43,27 +43,34 @@ class Model
         return $this;
     }
 
-    public function where()
+    public function where(){
+        $args = func_get_args();
+        $this->_where = call_user_func_array([$this, 'createWhere'], $args);
+        $this->where = call_user_func_array([$this, 'createWhere'], $args);
+        return $this;
+    }
+
+    private function createWhere()
     {
         $args = func_get_args();
         $n = count($args);
         if(is_string($args[$n - 1])){
-            $m = $args[$n - 1];
+            $condition = $args[$n - 1];
             unset($args[$n - 1]);
         }
         else{
-            $m = 'AND';
+            $condition = 'AND';
         }
         $where = [];
         foreach ($args as $k => $v) {
             if (is_array($v[0])) {
-                $where[] = '(' . call_user_func_array([$this, 'where'], $v) . ')';
+                $where[] = '(' . call_user_func_array([$this, 'createWhere'], $v) . ')';
             }
             else{
                 $where[] = '(' . implode(' ', $v) . ')';
             }
         }
-        return implode(" $m ", $where);
+        return implode(" ${condition} ", $where);
     }
 
     public function limit($offset, $limit)

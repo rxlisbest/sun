@@ -15,6 +15,7 @@ class Model
     protected $db_class = 'Rxlisbest\Sun\Component\Db';
     protected $db;
 
+    private $_table;
     private $_field;
     private $_where;
     private $_offset = 0;
@@ -23,15 +24,27 @@ class Model
     private $_group;
     private $_order;
 
+    private $sql_template = 'SELECT %FIELD% FROM %TABLE% %JOIN% %WHERE% %GROUP% %ORDER%';
+
     public function __construct()
     {
         $db = Sun::createObject($this->db_class, [Sun::$config['database']]);
         $this->db = $db->connection();
+        $this->_table = $this->getTableName();
     }
 
-    public function get()
+    public function getTableName(){
+        $prefix = Sun::$config['database']['prefix'];
+        $class_name = get_class($this);
+        $class_name = substr($class_name, strrpos($class_name, '\\') + 1);
+        $table = $prefix . strtolower($class_name);
+        return $table;
+    }
+
+    public static function get()
     {
-        return $this->db->query('SELECT * FROM migration');
+        return Sun::createObject(get_class());
+//        return $this->db->query('SELECT * FROM migration');
     }
 
     public function field($field)
@@ -43,10 +56,34 @@ class Model
         return $this;
     }
 
-    public function where(){
+    public function where()
+    {
         $args = func_get_args();
-        $this->_where = call_user_func_array([$this, 'createWhere'], $args);
-        $this->where = call_user_func_array([$this, 'createWhere'], $args);
+        $this->andWhere($args);
+        return $this;
+    }
+
+    public function andWhere()
+    {
+        $args = func_get_args();
+        $_where = call_user_func_array([$this, 'createWhere'], $args);
+        if (!$this->_where) {
+            $this->_where = $_where;
+        } else {
+            $this->_where .= ' AND ' . $_where;
+        }
+        return $this;
+    }
+
+    public function orWhere()
+    {
+        $args = func_get_args();
+        $_where = call_user_func_array([$this, 'createWhere'], $args);
+        if (!$this->_where) {
+            $this->_where = $_where;
+        } else {
+            $this->_where .= ' OR ' . $_where;
+        }
         return $this;
     }
 
@@ -54,19 +91,17 @@ class Model
     {
         $args = func_get_args();
         $n = count($args);
-        if(is_string($args[$n - 1])){
+        if (is_string($args[$n - 1])) {
             $condition = $args[$n - 1];
             unset($args[$n - 1]);
-        }
-        else{
+        } else {
             $condition = 'AND';
         }
         $where = [];
         foreach ($args as $k => $v) {
             if (is_array($v[0])) {
                 $where[] = '(' . call_user_func_array([$this, 'createWhere'], $v) . ')';
-            }
-            else{
+            } else {
                 $where[] = '(' . implode(' ', $v) . ')';
             }
         }
@@ -84,6 +119,12 @@ class Model
 
         $this->_offset = $offset;
         $this->_limit = $limit;
+        return $this;
+    }
+
+    public function join($table, $condition)
+    {
+        $this->_group = $group;
         return $this;
     }
 

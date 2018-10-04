@@ -29,6 +29,8 @@ class Model
 
     private $select_template = 'SELECT %FIELD% FROM %TABLE% %FORCE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION% %LOCK%';
 
+    private $insert_template = 'INSERT INTO %TABLE% (%FIELD%) VALUES (%VALUE%)';
+
     public function __construct()
     {
         $db = Sun::createObject($this->db_class, [Sun::$config['database']]);
@@ -223,7 +225,26 @@ class Model
         return $this->_where;
     }
 
-    public function sql()
+    public function select(){
+        $sql = $this->selectSql();
+        $list = $this->db->query($sql)->fetchAll();
+        return $list;
+    }
+
+    public function insert($data){
+        $sql = $this->insertSql($data);
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->db->prepare($sql);
+        try {
+            $result = $this->db->execute($data);
+            $id = $db->lastinsertid();
+        } catch (\PDOException $e) {
+            echo 'insert error: '.print_r($data,true) ."\n" .$e->getMessage();
+        }
+        return $id;
+    }
+
+    public function selectSql()
     {
         $this->parseTable();
         $this->parseField();
@@ -256,8 +277,23 @@ class Model
             $this->_lock,
         ];
 
-        $this->select_template;
         $sql = str_replace($before, $after, $this->select_template);
+        return $sql;
+    }
+
+    public function insertSql($data){
+        $field = array_keys($data);
+        $value = array_keys($data);
+
+        $before = [
+            '%FIELD%',
+            '%VALUE%',
+        ];
+        $after = [
+            implode(',', $field),
+            implode(',', $field),
+        ];
+        $sql = str_replace($before, $after, $this->insert_template);
         return $sql;
     }
 }

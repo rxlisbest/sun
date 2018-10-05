@@ -27,7 +27,6 @@ class Model
     private $_union;
     private $_lock;
 
-    private $select_template = 'SELECT %FIELD% FROM %TABLE% %FORCE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION% %LOCK%';
 
     public function __construct()
     {
@@ -225,36 +224,10 @@ class Model
 
     public function select()
     {
-        $sql = $this->selectSql();
-        return $this->db->select();
-    }
-
-    public function insert($data)
-    {
-        $this->parseTable();
-        return $this->db->insert($this->_table, $data);
-    }
-
-    public function selectSql()
-    {
         $this->parseTable();
         $this->parseField();
         $this->parseWhere();
-
-        $before = [
-            ' %FIELD%',
-            ' %TABLE%',
-            ' %FORCE%',
-            ' %JOIN%',
-            ' %WHERE%',
-            ' %GROUP%',
-            ' %HAVING%',
-            ' %ORDER%',
-            ' %LIMIT%',
-            ' %UNION%',
-            ' %LOCK%'
-        ];
-        $after = [
+        $data = [
             $this->_field,
             $this->_table,
             $this->_force,
@@ -267,8 +240,33 @@ class Model
             $this->_union,
             $this->_lock,
         ];
+        return $this->db->select($data);
+    }
 
-        $sql = str_replace($before, $after, $this->select_template);
-        return $sql;
+    public function find()
+    {
+        $this->parseTable();
+        $this->parseField();
+        $this->parseWhere();
+        $data = [
+            $this->_field,
+            $this->_table,
+            $this->_force,
+            $this->_join,
+            $this->_where,
+            $this->_group,
+            $this->_having,
+            $this->_order,
+            $this->_limit,
+            $this->_union,
+            $this->_lock,
+        ];
+        return $this->db->find($data);
+    }
+
+    public function insert($data)
+    {
+        $this->parseTable();
+        return $this->db->insert($this->_table, $data);
     }
 }

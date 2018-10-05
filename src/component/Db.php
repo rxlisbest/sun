@@ -12,11 +12,22 @@ class Db
 {
     protected $_conn;
 
+    private $select_template = 'SELECT %FIELD% FROM %TABLE% %FORCE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION% %LOCK%';
     private $insert_template = 'INSERT INTO %TABLE% (%FIELD%) VALUES (%VALUE%)';
 
     public function __construct($config)
     {
         $this->_conn = new \PDO($config['dsn'], $config['username'], $config['password']);
+    }
+
+    public function select($data){
+        $sql = $this->selectSql($data);
+        return $this->_conn->query($sql)->fetchAll();
+    }
+
+    public function find($data){
+        $sql = $this->selectSql($data);
+        return $this->_conn->query($sql)->fetch();
     }
 
     public function insert($table, $data)
@@ -55,6 +66,26 @@ class Db
             implode(',', $value),
         ];
         $sql = str_replace($before, $after, $this->insert_template);
+        return $sql;
+    }
+
+    public function selectSql($data)
+    {
+        $before = [
+            ' %FIELD%',
+            ' %TABLE%',
+            ' %FORCE%',
+            ' %JOIN%',
+            ' %WHERE%',
+            ' %GROUP%',
+            ' %HAVING%',
+            ' %ORDER%',
+            ' %LIMIT%',
+            ' %UNION%',
+            ' %LOCK%'
+        ];
+        $after = $data;
+        $sql = str_replace($before, $after, $this->select_template);
         return $sql;
     }
 }

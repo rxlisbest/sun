@@ -14,6 +14,7 @@ class Db
 
     private $select_template = 'SELECT %FIELD% FROM %TABLE% %FORCE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION% %LOCK%';
     private $insert_template = 'INSERT INTO %TABLE% (%FIELD%) VALUES (%VALUE%)';
+    private $update_template = 'UPDATE %TABLE% SET %FIELD% %WHERE%';
 
     public function __construct($config)
     {
@@ -45,6 +46,39 @@ class Db
         }
     }
 
+    public function update($table, $data, $where){
+        $sql = $this->updateSql($table, $data, $where);
+        $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $sth = $this->_conn->prepare($sql);
+        try {
+            $sth->execute($data);
+            $rows = $sth->rowCount();
+            return $rows;
+        } catch (\PDOException $e) {
+            echo 'insert error: ' . print_r($data, true) . "\n" . $e->getMessage();
+        }
+    }
+
+    public function selectSql($data)
+    {
+        $before = [
+            ' %FIELD%',
+            ' %TABLE%',
+            ' %FORCE%',
+            ' %JOIN%',
+            ' %WHERE%',
+            ' %GROUP%',
+            ' %HAVING%',
+            ' %ORDER%',
+            ' %LIMIT%',
+            ' %UNION%',
+            ' %LOCK%'
+        ];
+        $after = $data;
+        $sql = str_replace($before, $after, $this->select_template);
+        return $sql;
+    }
+
     public function insertSql($table, $data)
     {
         $field = array_keys($data);
@@ -69,23 +103,25 @@ class Db
         return $sql;
     }
 
-    public function selectSql($data)
-    {
+    public function updateSql($table, $data, $where){
+        $field = array_keys($data);
+
+        $r = function ($field) {
+            return "`${field}`=:${field}";
+        };
+        $field = array_map($r, $field);
+
         $before = [
-            ' %FIELD%',
-            ' %TABLE%',
-            ' %FORCE%',
-            ' %JOIN%',
-            ' %WHERE%',
-            ' %GROUP%',
-            ' %HAVING%',
-            ' %ORDER%',
-            ' %LIMIT%',
-            ' %UNION%',
-            ' %LOCK%'
+            '%TABLE%',
+            '%FIELD%',
+            '%WHERE%',
         ];
-        $after = $data;
-        $sql = str_replace($before, $after, $this->select_template);
+        $after = [
+            $table,
+            implode(',', $field),
+            $where,
+        ];
+        $sql = str_replace($before, $after, $this->update_template);
         return $sql;
     }
 }

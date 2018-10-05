@@ -269,4 +269,10 @@ class Model
         $this->parseTable();
         return $this->db->insert($this->_table, $data);
     }
+
+    public function update($data){
+        $this->parseTable();
+        $this->parseWhere();
+        return $this->db->update($this->_table, $data, $this->_where);
+    }
 }

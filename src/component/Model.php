@@ -275,4 +275,10 @@ class Model
         $this->parseWhere();
         return $this->db->update($this->_table, $data, $this->_where);
     }
+
+    public function delete(){
+        $this->parseTable();
+        $this->parseWhere();
+        return $this->db->delete($this->_table, $this->_where);
+    }
 }

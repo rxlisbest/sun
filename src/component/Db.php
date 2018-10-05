@@ -15,6 +15,7 @@ class Db
     private $select_template = 'SELECT %FIELD% FROM %TABLE% %FORCE% %JOIN% %WHERE% %GROUP% %HAVING% %ORDER% %LIMIT% %UNION% %LOCK%';
     private $insert_template = 'INSERT INTO %TABLE% (%FIELD%) VALUES (%VALUE%)';
     private $update_template = 'UPDATE %TABLE% SET %FIELD% %WHERE%';
+    private $delete_template = 'DELETE FROM %TABLE% %WHERE%';
 
     public function __construct($config)
     {
@@ -52,6 +53,19 @@ class Db
         $sth = $this->_conn->prepare($sql);
         try {
             $sth->execute($data);
+            $rows = $sth->rowCount();
+            return $rows;
+        } catch (\PDOException $e) {
+            echo 'insert error: ' . print_r($data, true) . "\n" . $e->getMessage();
+        }
+    }
+
+    public function delete($table, $where){
+        $sql = $this->deleteSql($table, $where);
+        $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $sth = $this->_conn->prepare($sql);
+        try {
+            $sth->execute();
             $rows = $sth->rowCount();
             return $rows;
         } catch (\PDOException $e) {
@@ -122,6 +136,19 @@ class Db
             $where,
         ];
         $sql = str_replace($before, $after, $this->update_template);
+        return $sql;
+    }
+
+    public function deleteSql($table, $where){
+        $before = [
+            '%TABLE%',
+            '%WHERE%',
+        ];
+        $after = [
+            $table,
+            $where,
+        ];
+        $sql = str_replace($before, $after, $this->delete_template);
         return $sql;
     }
 }

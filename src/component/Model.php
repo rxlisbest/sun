@@ -43,10 +43,9 @@ class Model
         return $table;
     }
 
-    public static function get()
+    public static function ins()
     {
-        return Sun::createObject(get_class());
-        //        return $this->db->query('SELECT * FROM migration');
+        return Sun::createObject(get_called_class());
     }
 
     public function field($field)
@@ -270,13 +269,15 @@ class Model
         return $this->db->insert($this->_table, $data);
     }
 
-    public function update($data){
+    public function update($data)
+    {
         $this->parseTable();
         $this->parseWhere();
         return $this->db->update($this->_table, $data, $this->_where);
     }
 
-    public function delete(){
+    public function delete()
+    {
         $this->parseTable();
         $this->parseWhere();
         return $this->db->delete($this->_table, $this->_where);

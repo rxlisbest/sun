@@ -8,16 +8,13 @@
 
 namespace Rxlisbest\Sun\Component;
 
-use Rxlisbest\Sun\Sun;
-
 class View
 {
-    public function fetch($template, $params = [])
+    public function fetch($file, $params = [])
     {
         ob_start();
         ob_implicit_flush(0);
         extract($params, EXTR_OVERWRITE);
-        $file = Sun::$config['base_path'] . '/app/views/index/index.php';
         include($file);
         $content = ob_get_clean();
         echo $content;

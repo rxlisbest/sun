@@ -18,8 +18,11 @@ class Route
 
     public function getUrl()
     {
+        $url = '';
         if (Sun::$config['path_info']) {
-            $url = $_SERVER['REQUEST_URI'];
+            if(isset($_SERVER['REQUEST_URI'])){
+                $url = $_SERVER['REQUEST_URI'];
+            }
         } else {
             $param = $this->param;
             $url = $_GET[$param];

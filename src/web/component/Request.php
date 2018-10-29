@@ -6,11 +6,11 @@
  * Time: 下午4:19
  */
 
-namespace Rxlisbest\Sun\Component;
+namespace Rxlisbest\Sun\Web\Component;
 
-use Rxlisbest\Sun\Core\Route;
+use Rxlisbest\Sun\Web\Core\Route;
 
-class Request implements \Rxlisbest\Sun\Core\Request
+class Request implements \Rxlisbest\Sun\Web\Core\Request
 {
     public function get()
     {

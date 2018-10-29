@@ -6,12 +6,10 @@
  * Time: 下午3:17
  */
 
-namespace Rxlisbest\Sun\Core;
+namespace Rxlisbest\Sun\Web\Component;
 
-interface Route
+
+class Component
 {
-
-    public function getUrl();
-
 
 }

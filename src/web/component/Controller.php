@@ -6,7 +6,7 @@
  * Time: 下午1:42
  */
 
-namespace Rxlisbest\Sun\Component;
+namespace Rxlisbest\Sun\Web\Component;
 
 use Rxlisbest\Sun\Sun;
 
@@ -15,7 +15,7 @@ defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 class Controller
 {
     protected $view;
-    protected $view_class = 'Rxlisbest\Sun\Component\View';
+    protected $view_class = 'Rxlisbest\Sun\Web\Component\View';
 
     public function __construct()
     {

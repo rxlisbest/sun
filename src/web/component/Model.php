@@ -6,7 +6,7 @@
  * Time: 下午1:43
  */
 
-namespace Rxlisbest\Sun\Component;
+namespace Rxlisbest\Sun\Web\Component;
 
 use Rxlisbest\Sun\Sun;
 

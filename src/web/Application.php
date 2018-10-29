@@ -6,11 +6,12 @@
  * Time: 下午3:16
  */
 
-namespace Rxlisbest\Sun;
+namespace Rxlisbest\Sun\Web;
 
+use Rxlisbest\Sun\Sun;
 use Rxlisbest\Sun\Core\Factory;
-use Rxlisbest\Sun\Core\Base;
 use Rxlisbest\Sun\Core\ClassLoader;
+use Rxlisbest\Sun\Web\Core\Base;
 
 class Application extends Base
 {
@@ -19,8 +20,8 @@ class Application extends Base
     protected $factory;
 
     protected $component = [
-        'request' => 'Rxlisbest\Sun\Component\Request',
-        'route' => 'Rxlisbest\Sun\Component\Route'
+        'request' => 'Rxlisbest\Sun\Web\Component\Request',
+        'route' => 'Rxlisbest\Sun\Web\Component\Route'
     ];
 
     protected $controller_namespace = 'app\controllers';

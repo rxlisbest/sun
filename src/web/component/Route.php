@@ -6,7 +6,7 @@
  * Time: 下午3:17
  */
 
-namespace Rxlisbest\Sun\Component;
+namespace Rxlisbest\Sun\Web\Component;
 
 use Rxlisbest\Sun\Sun;
 
@@ -20,7 +20,7 @@ class Route
     {
         $url = '';
         if (Sun::$config['path_info']) {
-            if(isset($_SERVER['REQUEST_URI'])){
+            if (isset($_SERVER['REQUEST_URI'])) {
                 $url = $_SERVER['REQUEST_URI'];
             }
         } else {

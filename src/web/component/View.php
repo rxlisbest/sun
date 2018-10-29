@@ -6,7 +6,7 @@
  * Time: 下午5:20
  */
 
-namespace Rxlisbest\Sun\Component;
+namespace Rxlisbest\Sun\Web\Component;
 
 class View
 {

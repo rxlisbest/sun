@@ -6,7 +6,7 @@
  * Time: 下午2:55
  */
 
-namespace Rxlisbest\Sun\Core;
+namespace Rxlisbest\Sun\Web\Core;
 
 class Base
 {

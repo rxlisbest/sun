@@ -6,7 +6,7 @@
  * Time: 下午1:31
  */
 
-namespace Rxlisbest\Sun\Core;
+namespace Rxlisbest\Sun\Web\Core;
 
 
 interface Request

@@ -10,8 +10,5 @@ namespace Rxlisbest\Sun\Web\Core;
 
 interface Route
 {
-
     public function getUrl();
-
-
 }

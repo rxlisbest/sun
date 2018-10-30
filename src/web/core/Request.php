@@ -11,5 +11,4 @@ namespace Rxlisbest\Sun\Web\Core;
 
 interface Request
 {
-
 }

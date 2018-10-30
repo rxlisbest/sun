@@ -13,7 +13,7 @@ use Rxlisbest\Sun\Sun;
 
 class MigrationController extends Controller
 {
-    public function index()
+    public function run()
     {
         echo "migration";
     }

@@ -29,13 +29,11 @@ class Application
 
     public function run()
     {
-        $arr = $_SERVER['argv'];
-        $t = explode(':', $arr[1]);
-        $controller = $t[0];
-        $component = $this->component[$controller];
+        $argv = $this->getArgv();
+        $component = $this->getComponent($argv);
         $controller = $this->factory->get($component);
-        $action = 'index';
-        $params = [];
+        $action = $this->getAction($argv);
+        $params = $this->getParams($argv);
         call_user_func_array([$controller, $action], $params);
     }
 
@@ -44,9 +42,31 @@ class Application
         return $_SERVER['argv'];
     }
 
+    protected function getComponent($argv)
+    {
+        if (!isset($argv[1]) || $argv[1] == null) {
+            throw new \Exception("Comman can not empty.");
+        }
+        $component = explode(':', $argv[1]);
+        if (!isset($this->component[$component[0]])) {
+            throw new \Exception("Comman can not find.");
+        }
+        return $this->component[$component[0]];
+    }
+
     protected function getAction($argv)
     {
+        $component = explode(':', $argv[1]);
+        if (!isset($component[1])) {
+            $component[1] = 'run';
+        }
+        return $component[1];
+    }
 
+    protected function getParams($argv)
+    {
+        unset($argv[0], $argv[1]);
+        return $argv;
     }
 }
 

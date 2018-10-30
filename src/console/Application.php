@@ -11,51 +11,42 @@ namespace Rxlisbest\Sun\Console;
 use Rxlisbest\Sun\Sun;
 use Rxlisbest\Sun\Core\Factory;
 use Rxlisbest\Sun\Core\ClassLoader;
-use Rxlisbest\Sun\Web\Core\Base;
 
-class Application extends Base
+class Application
 {
-
     protected $config;
     protected $factory;
 
     protected $component = [
-        'request' => 'Rxlisbest\Sun\Web\Component\Request',
-        'route' => 'Rxlisbest\Sun\Web\Component\Route'
+        'migration' => 'Rxlisbest\Sun\Console\Controllers\MigrationController',
     ];
-
-    protected $controller_namespace = 'app\controllers';
 
     public function __construct($config)
     {
         Sun::$config = ClassLoader::$config = $config;
-        Sun::$controller_namespace = $this->controller_namespace;
         Sun::$factory = $this->factory = new Factory();
-        Sun::$app = $this;
     }
 
     public function run()
     {
-        $request = $this->getRequest();
-        $route = $this->getRoute();
-        $reponse = $this->handle($route, $request);
+        $arr = $_SERVER['argv'];
+        $t = explode(':', $arr[1]);
+        $controller = $t[0];
+        $component = $this->component[$controller];
+        $controller = $this->factory->get($component);
+        $action = 'index';
+        $params = [];
+        call_user_func_array([$controller, $action], $params);
     }
 
-    public function getComponent($id)
+    protected function getArgv()
     {
-        return $this->component[$id];
+        return $_SERVER['argv'];
     }
 
-    public function getRequest()
+    protected function getAction($argv)
     {
-        $class = $this->getComponent('request');
-        return $this->factory->get($class);
-    }
 
-    public function getRoute()
-    {
-        $class = $this->getComponent('route');
-        return $this->factory->get($class);
     }
 }
 

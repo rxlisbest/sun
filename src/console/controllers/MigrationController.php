@@ -15,6 +15,6 @@ class MigrationController extends Controller
 {
     public function index()
     {
-        $this->fetch('', ['name' => 'sun-framework']);
+        echo "migration";
     }
 }

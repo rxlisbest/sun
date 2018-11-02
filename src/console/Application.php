@@ -34,7 +34,7 @@ class Application
         $controller = $this->factory->get($component);
         $action = $this->getAction($argv);
         $params = $this->getParams($argv);
-        call_user_func_array([$controller, $action], $params);
+        call_user_func_array([$controller, $action], [$params]);
     }
 
     protected function getArgv()
@@ -66,7 +66,7 @@ class Application
     protected function getParams($argv)
     {
         unset($argv[0], $argv[1]);
-        return $argv;
+        return array_values($argv);
     }
 }
 

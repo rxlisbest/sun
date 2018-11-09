@@ -29,7 +29,29 @@ class MigrationController
             mkdir($path, 0777, true);
         }
         $fp = fopen($file, "w");
-        fwrite($fp, "test");
+        $content = $this->content($class_name);
+        fwrite($fp, $content);
         fclose($fp);
+    }
+
+    protected function content($class)
+    {
+        $content = <<<data
+<?php
+namespace database\migration;
+
+class ${class} {
+    public function up()
+    {
+        // do nothing
+    }
+    
+    public function down()
+    {
+        // do nothing
+    }
+}
+data;
+        return $content;
     }
 }

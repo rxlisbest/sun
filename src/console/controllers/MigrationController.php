@@ -9,11 +9,15 @@
 namespace Rxlisbest\Sun\Console\Controllers;
 
 use Rxlisbest\Sun\Sun;
+use Rxlisbest\Sun\Console\Models\Migration;
 
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 class MigrationController
 {
+    protected $db_class = 'Rxlisbest\Sun\Web\Component\Db';
+    protected $table = "migration";
+
     public function run()
     {
         echo "migration";
@@ -53,5 +57,14 @@ class ${class} {
 }
 data;
         return $content;
+    }
+
+    public function up()
+    {
+//        Migration::ins()->select();
+        $db = Sun::createObject($this->db_class, [Sun::$config['database']]);
+        $this->db = $db;
+        $result = $this->db->createTable('migrate2', ['id int not null auto_increment', 'name varchar(255)']);
+        var_dump($result);
     }
 }

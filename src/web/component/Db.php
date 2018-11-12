@@ -8,6 +8,8 @@
 
 namespace Rxlisbest\Sun\Web\Component;
 
+use rxlisbest\easylog\EasyLog;
+
 class Db
 {
     protected $_conn;
@@ -16,18 +18,21 @@ class Db
     private $insert_template = 'INSERT INTO %TABLE% (%FIELD%) VALUES (%VALUE%)';
     private $update_template = 'UPDATE %TABLE% SET %FIELD% %WHERE%';
     private $delete_template = 'DELETE FROM %TABLE% %WHERE%';
+    private $create_table_template = 'CREATE TABLE IF NOT EXISTS %TABLE% (%COLUMN%) %OPTION%';
 
     public function __construct($config)
     {
         $this->_conn = new \PDO($config['dsn'], $config['username'], $config['password']);
     }
 
-    public function select($data){
+    public function select($data)
+    {
         $sql = $this->selectSql($data);
         return $this->_conn->query($sql)->fetchAll();
     }
 
-    public function find($data){
+    public function find($data)
+    {
         $sql = $this->selectSql($data);
         return $this->_conn->query($sql)->fetch();
     }
@@ -43,11 +48,12 @@ class Db
             $id = $this->_conn->lastInsertId();
             return $id;
         } catch (\PDOException $e) {
-            echo 'insert error: ' . print_r($data, true) . "\n" . $e->getMessage();
+            EasyLog::text($e->getMessage(), 'error');
         }
     }
 
-    public function update($table, $data, $where){
+    public function update($table, $data, $where)
+    {
         $sql = $this->updateSql($table, $data, $where);
         $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $sth = $this->_conn->prepare($sql);
@@ -56,11 +62,12 @@ class Db
             $rows = $sth->rowCount();
             return $rows;
         } catch (\PDOException $e) {
-            echo 'insert error: ' . print_r($data, true) . "\n" . $e->getMessage();
+            EasyLog::text($e->getMessage(), 'error');
         }
     }
 
-    public function delete($table, $where){
+    public function delete($table, $where)
+    {
         $sql = $this->deleteSql($table, $where);
         $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $sth = $this->_conn->prepare($sql);
@@ -69,7 +76,7 @@ class Db
             $rows = $sth->rowCount();
             return $rows;
         } catch (\PDOException $e) {
-            echo 'insert error: ' . print_r($data, true) . "\n" . $e->getMessage();
+            EasyLog::text($e->getMessage(), 'error');
         }
     }
 
@@ -117,7 +124,8 @@ class Db
         return $sql;
     }
 
-    public function updateSql($table, $data, $where){
+    public function updateSql($table, $data, $where)
+    {
         $field = array_keys($data);
 
         $r = function ($field) {
@@ -139,7 +147,8 @@ class Db
         return $sql;
     }
 
-    public function deleteSql($table, $where){
+    public function deleteSql($table, $where)
+    {
         $before = [
             '%TABLE%',
             '%WHERE%',
@@ -150,5 +159,34 @@ class Db
         ];
         $sql = str_replace($before, $after, $this->delete_template);
         return $sql;
+    }
+
+    public function createTableSql($table, $columns, $options = '')
+    {
+        $columns = implode(',', $columns);
+        $before = [
+            '%TABLE%',
+            '%COLUMN%',
+            '%OPTION%',
+        ];
+        $after = [
+            $table,
+            $columns,
+            $options,
+        ];
+        $sql = str_replace($before, $after, $this->create_table_template);
+        return $sql;
+    }
+
+    public function createTable($table, $columns, $options = '')
+    {
+        $sql = $this->createTableSql($table, $columns, $options = '');
+        $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        try {
+            $result = $this->_conn->exec($sql);
+            return true;
+        } catch (\PDOException $e) {
+            EasyLog::text($e->getMessage(), 'error');
+        }
     }
 }

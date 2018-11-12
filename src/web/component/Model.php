@@ -12,7 +12,7 @@ use Rxlisbest\Sun\Sun;
 
 class Model
 {
-    protected $db_class = 'Rxlisbest\Sun\Component\Db';
+    protected $db_class = 'Rxlisbest\Sun\Web\Component\Db';
     protected $db;
 
     private $_table;

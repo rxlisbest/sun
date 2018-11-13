@@ -19,6 +19,7 @@ class Db
     private $update_template = 'UPDATE %TABLE% SET %FIELD% %WHERE%';
     private $delete_template = 'DELETE FROM %TABLE% %WHERE%';
     private $create_table_template = 'CREATE TABLE IF NOT EXISTS %TABLE% (%COLUMN%) %OPTION%';
+    private $drop_table_template = 'DROP TABLE IF EXISTS `%TABLE%`';
 
     public function __construct($config)
     {
@@ -28,6 +29,7 @@ class Db
     public function select($data)
     {
         $sql = $this->selectSql($data);
+        var_dump($sql);
         return $this->_conn->query($sql)->fetchAll();
     }
 
@@ -178,9 +180,33 @@ class Db
         return $sql;
     }
 
+    public function dropTableSql($table)
+    {
+        $before = [
+            '%TABLE%',
+        ];
+        $after = [
+            $table,
+        ];
+        $sql = str_replace($before, $after, $this->drop_table_template);
+        return $sql;
+    }
+
     public function createTable($table, $columns, $options = '')
     {
         $sql = $this->createTableSql($table, $columns, $options = '');
+        $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        try {
+            $result = $this->_conn->exec($sql);
+            return true;
+        } catch (\PDOException $e) {
+            EasyLog::text($e->getMessage(), 'error');
+        }
+    }
+
+    public function dropTable($table)
+    {
+        $sql = $this->dropTableSql($table);
         $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         try {
             $result = $this->_conn->exec($sql);

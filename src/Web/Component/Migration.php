@@ -25,4 +25,10 @@ class Migration
         $result = $this->db->createTable($table, $columns, $options);
         return $result;
     }
+
+    protected function dropTable($table)
+    {
+        $result = $this->db->dropTable($table);
+        return $result;
+    }
 }

@@ -98,7 +98,7 @@ data;
                     call_user_func_array([$class, $action], []);
                 }
                 if (in_array($class_name, $class_name_list) && $action === 'down') {
-                    Migration::ins()->where(['class_name' => $class_name])->delete();
+                    $list = Migration::ins()->where(['class_name', '=', $class_name])->delete();
                     call_user_func_array([$class, $action], []);
                 }
             }

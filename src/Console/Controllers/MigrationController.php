@@ -72,16 +72,6 @@ data;
     public function up()
     {
         $this->initTable();
-        $this->exec('up');
-    }
-
-    public function down()
-    {
-        $this->exec('down');
-    }
-
-    protected function exec($action)
-    {
         $list = Migration::ins()->select();
         $class_name_list = array_column($list, 'class_name');
         $path = Sun::$config['base_path'] . DS . str_replace('\\', DS, $this->namespace) . DS;
@@ -90,20 +80,30 @@ data;
             if (is_file($path . $file_name)) {
                 $class_name = substr($file_name, 0, strpos($file_name, "."));
                 $class = Sun::createObject('\\' . $this->namespace . '\\' . $class_name);
-                if (!in_array($class_name, $class_name_list) && $action === 'up') {
+                if (!in_array($class_name, $class_name_list)) {
                     $data = [];
                     $data['class_name'] = $class_name;
                     $data['create_time'] = time();
                     Migration::ins()->insert($data);
-                    call_user_func_array([$class, $action], []);
-                }
-                if (in_array($class_name, $class_name_list) && $action === 'down') {
-                    $list = Migration::ins()->where(['class_name', '=', $class_name])->delete();
-                    call_user_func_array([$class, $action], []);
+                    call_user_func_array([$class, 'up'], []);
                 }
             }
         }
         closedir($handler);
+    }
+
+    public function down()
+    {
+        $info = Migration::ins()->find();
+        if ($info) {
+            $path = Sun::$config['base_path'] . DS . str_replace('\\', DS, $this->namespace) . DS;
+            $handler = opendir($path);
+            if (is_file($path . $info['class_name'] . '.php')) {
+                $class = Sun::createObject('\\' . $this->namespace . '\\' . $info['class_name']);
+                $list = Migration::ins()->where(['class_name', '=', $info['class_name']])->delete();
+                call_user_func_array([$class, 'down'], []);
+            }
+        }
     }
 
     protected function createClassName($class_name)

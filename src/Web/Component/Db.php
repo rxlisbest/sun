@@ -29,7 +29,6 @@ class Db
     public function select($data)
     {
         $sql = $this->selectSql($data);
-        var_dump($sql);
         return $this->_conn->query($sql)->fetchAll();
     }
 

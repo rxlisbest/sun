@@ -14,7 +14,7 @@ use Rxlisbest\Sun\Console\Models\Migration;
 
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
-class MigrationController
+class MigrationController extends \Rxlisbest\Sun\Web\Component\Migration
 {
     protected $table = "migration";
     protected $namespace = 'database\migration';
@@ -71,13 +71,36 @@ data;
 
     public function up()
     {
+        $this->initTable();
+        $this->exec('up');
+    }
+
+    public function down()
+    {
+        $this->exec('down');
+    }
+
+    protected function exec($action)
+    {
+        $list = Migration::ins()->select();
+        $class_name_list = array_column($list, 'class_name');
         $path = Sun::$config['base_path'] . DS . str_replace('\\', DS, $this->namespace) . DS;
         $handler = opendir($path);
         while (($file_name = readdir($handler)) !== false) {
             if (is_file($path . $file_name)) {
-                $class_name = $this->createClassName($file_name);
+                $class_name = substr($file_name, 0, strpos($file_name, "."));
                 $class = Sun::createObject('\\' . $this->namespace . '\\' . $class_name);
-                call_user_func_array([$class, "up"], []);
+                if (!in_array($class_name, $class_name_list) && $action === 'up') {
+                    $data = [];
+                    $data['class_name'] = $class_name;
+                    $data['create_time'] = time();
+                    Migration::ins()->insert($data);
+                    call_user_func_array([$class, $action], []);
+                }
+                if (in_array($class_name, $class_name_list) && $action === 'down') {
+                    Migration::ins()->where(['class_name' => $class_name])->delete();
+                    call_user_func_array([$class, $action], []);
+                }
             }
         }
         closedir($handler);
@@ -87,5 +110,16 @@ data;
     {
         $class_name = 's' . date('YmdHis') . '_' . strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $class_name));
         return $class_name;
+    }
+
+    protected function initTable()
+    {
+        $this->db->createTable(
+            Sun::$config['database']['prefix'] . 'migration',
+            [
+                'class_name varchar(255) NOT NULL DEFAULT \'\' COMMENT \'class name\'',
+                'create_time bigint(20) NOT NULL DEFAULT 0 COMMENT \'create time\'',
+            ]
+        );
     }
 }

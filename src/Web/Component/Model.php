@@ -116,7 +116,7 @@ class Model
             if (is_array($v[0])) {
                 $where[] = '(' . call_user_func_array([$this, 'createWhere'], $v) . ')';
             } else {
-                if (is_string($v[2])) {
+                if (isset($v[2]) && is_string($v[2])) {
                     $v[2] = "'{$v[2]}'";
                 }
                 $where[] = '(' . implode(' ', $v) . ')';

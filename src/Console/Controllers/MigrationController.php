@@ -94,7 +94,7 @@ data;
 
     public function down()
     {
-        $info = Migration::ins()->find();
+        $info = Migration::ins()->order('create_time DESC')->find();
         if ($info) {
             $path = Sun::$config['base_path'] . DS . str_replace('\\', DS, $this->namespace) . DS;
             $handler = opendir($path);

@@ -31,4 +31,16 @@ class Migration
         $result = $this->db->dropTable($table);
         return $result;
     }
+
+    protected function addColumn($table, $column)
+    {
+        $result = $this->db->addColumn($table, $column);
+        return $result;
+    }
+
+    protected function dropColumn($table, $column)
+    {
+        $result = $this->db->dropColumn($table, $column);
+        return $result;
+    }
 }

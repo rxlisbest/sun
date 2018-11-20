@@ -21,6 +21,7 @@ class Db
     private $create_table_template = 'CREATE TABLE IF NOT EXISTS %TABLE% (%COLUMN%) %OPTION%';
     private $drop_table_template = 'DROP TABLE IF EXISTS `%TABLE%`';
     private $column_template = 'ALTER TABLE `%TABLE%` %TYPE% COLUMN %COLUMN%';
+    private $create_database_template = 'CREATE DATABASE IF NOT EXISTS %DATABASE% %OPTION%';
 
     public function __construct($config)
     {
@@ -232,6 +233,20 @@ class Db
         return $sql;
     }
 
+    public function createDatabaseSql($database, $options)
+    {
+        $before = [
+            '%DATABASE%',
+            '%OPTION%',
+        ];
+        $after = [
+            $database,
+            $options,
+        ];
+        $sql = str_replace($before, $after, $this->create_database_template);
+        return $sql;
+    }
+
     public function addColumn($table, $column)
     {
         $sql = $this->columnSql($table, 'ADD', $column);
@@ -247,6 +262,18 @@ class Db
     public function dropColumn($table, $column)
     {
         $sql = $this->columnSql($table, 'DROP', $column);
+        $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        try {
+            $result = $this->_conn->exec($sql);
+            return true;
+        } catch (\PDOException $e) {
+            EasyLog::text($e->getMessage(), 'error');
+        }
+    }
+
+    public function createDatabase($database, $options = '')
+    {
+        $sql = $this->createDatabaseSql($database, $options);
         $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         try {
             $result = $this->_conn->exec($sql);

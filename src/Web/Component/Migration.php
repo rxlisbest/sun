@@ -43,4 +43,14 @@ class Migration
         $result = $this->db->dropColumn($table, $column);
         return $result;
     }
+
+    protected function string($length = 255){
+        return $this;
+    }
+
+    protected function integer($length){
+        return $this;
+    }
+
+    
 }

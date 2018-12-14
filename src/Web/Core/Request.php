@@ -9,6 +9,11 @@
 namespace Rxlisbest\Sun\Web\Core;
 
 
-interface Request
+abstract class Request
 {
+    public function get(){}
+    
+    public function post(){}
+
+    public function request(){}
 }

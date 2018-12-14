@@ -10,7 +10,7 @@ namespace Rxlisbest\Sun\Web\Component;
 
 use Rxlisbest\Sun\Web\Core\Route;
 
-class Request implements \Rxlisbest\Sun\Web\Core\Request
+class Request extends \Rxlisbest\Sun\Web\Core\Request
 {
     public function get()
     {

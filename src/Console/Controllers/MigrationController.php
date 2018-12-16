@@ -11,6 +11,7 @@ namespace Rxlisbest\Sun\Console\Controllers;
 use rxlisbest\easylog\EasyLog;
 use Rxlisbest\Sun\Sun;
 use Rxlisbest\Sun\Console\Models\Migration;
+use Rxlisbest\Sun\Web\Component\DbData;
 
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
@@ -117,8 +118,8 @@ data;
         $this->db->createTable(
             Sun::$config['database']['prefix'] . 'migration',
             [
-                'class_name varchar(255) NOT NULL DEFAULT \'\' COMMENT \'class name\'',
-                'create_time bigint(20) NOT NULL DEFAULT 0 COMMENT \'create time\'',
+                DbData::field('class_name')->string(255)->isNull(false)->defaultValue('')->comment('class name')->build(),
+                DbData::field('create_time')->bigInt(20)->isNull(false)->defaultValue(0)->comment('create time')->build(),
             ]
         );
     }

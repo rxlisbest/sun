@@ -10,18 +10,31 @@ namespace Rxlisbest\Sun\Web\Component;
 
 class DbData
 {
+    private $build_type = 'column'; // column, index, primary_key
     private $field;
     private $type;
     private $length = 0;
     private $is_null = true;
     private $default_value = false;
     private $comment = '';
+    private $auto_increment = false;
 
     public static function field($field)
     {
         $class = new self();
         $class->field = $field;
         return $class;
+    }
+
+    public static function primaryKey($field)
+    {
+        $class = self::field($field);
+        $class->build_type = 'primary_key';
+        return $class;
+    }
+
+    public static function index($field, $option){
+
     }
 
     public function string($length = 255)
@@ -63,6 +76,12 @@ class DbData
         return $this;
     }
 
+    public function autoIncrement($auto_increment)
+    {
+        $this->auto_increment = $auto_increment;
+        return $this;
+    }
+
     public function build()
     {
         if ($this->field || $this->type) {
@@ -81,8 +100,12 @@ class DbData
             }
         }
         if ($this->comment) {
-            $str .= " COMMENT '{$this->comment}';";
+            $str .= " COMMENT '{$this->comment}'";
         }
+        if ($this->auto_increment) {
+            $str .= " AUTO_INCREMENT";
+        }
+        $str .= ";";
         return $str;
     }
 }

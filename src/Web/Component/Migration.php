@@ -9,6 +9,7 @@
 namespace Rxlisbest\Sun\Web\Component;
 
 use Rxlisbest\Sun\Sun;
+use Rxlisbest\Sun\Web\Component\DbData;
 
 class Migration
 {
@@ -22,6 +23,11 @@ class Migration
 
     protected function createTable($table, $columns, $options = '')
     {
+        foreach ($columns as $k => $v) {
+            if ($v instanceof DbData) {
+                $columns[$k] = $v->build();
+            }
+        }
         $result = $this->db->createTable($table, $columns, $options);
         return $result;
     }
@@ -44,13 +50,15 @@ class Migration
         return $result;
     }
 
-    protected function string($length = 255){
+    protected function string($length = 255)
+    {
         return $this;
     }
 
-    protected function integer($length){
+    protected function integer($length)
+    {
         return $this;
     }
 
-    
+
 }

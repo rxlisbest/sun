@@ -85,8 +85,12 @@ data;
                     $data = [];
                     $data['class_name'] = $class_name;
                     $data['create_time'] = time();
-                    Migration::ins()->insert($data);
-                    call_user_func_array([$class, 'up'], []);
+                    try {
+                        call_user_func_array([$class, 'up'], []);
+                        Migration::ins()->insert($data);
+                    } catch (\Exception $exception) {
+                        
+                    }
                 }
             }
         }
@@ -115,11 +119,11 @@ data;
 
     protected function initTable()
     {
-        $this->db->createTable(
+        $this->createTable(
             Sun::$config['database']['prefix'] . 'migration',
             [
-                DbData::field('class_name')->string(255)->isNull(false)->defaultValue('')->comment('class name')->build(),
-                DbData::field('create_time')->bigInt(20)->isNull(false)->defaultValue(0)->comment('create time')->build(),
+                DbData::field('class_name')->string(255)->isNull(false)->defaultValue('')->comment('class name'),
+                DbData::field('create_time')->bigInt(20)->isNull(false)->defaultValue(0)->comment('create time'),
             ]
         );
     }

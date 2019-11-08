@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "rxlisbest/easylog": "^2.0"
+        "rxlisbest/easylog": "^2.0",
+        "vlucas/phpdotenv": "^3.6"
     },
     "autoload": {
         "psr-4": {
